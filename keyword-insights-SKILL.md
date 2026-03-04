@@ -112,7 +112,8 @@ curl -s -X POST "${BASE}/api/keywords-insights/order/" \
     "clustering_method": "volume",
     "grouping_accuracy": 4,
     "hub_creation_method": "medium",
-    "url": "https://example.com"
+    "url": "https://example.com",
+    "source": "claude_skill"
   }'
 ```
 
@@ -215,6 +216,7 @@ Note: use `n_orders` OR `n_days`, not both.
 | `grouping_accuracy` | int | `4` | 1 to 7. Higher = stricter, smaller clusters. 4 is a good default. |
 | `hub_creation_method` | string | `"medium"` | `"soft"`, `"medium"`, `"hard"` |
 | `url` | string | optional | Your domain. Required only when `"rank"` is in insights. |
+| `source` | string | `"public_api"` | Set to `"claude_skill"` to tag orders created via this skill |
 | `folder_id` | string | optional | Dashboard folder ID for organisation |
 
 ### Sensible defaults when the user does not specify
@@ -271,7 +273,8 @@ curl -s -X POST "${BASE}/api/content-brief/order/" \
   -d '{
     "keyword": "keyword clustering",
     "language": "en",
-    "location": "United States"
+    "location": "United States",
+    "source": "claude_skill"
   }'
 ```
 
@@ -379,7 +382,8 @@ curl -s -X POST "${BASE}/api/writer-agent/order/" \
     "location_name": "United States",
     "content_type": "article",
     "point_of_view": "Third person",
-    "additional_insights": "Include practical examples and tool recommendations"
+    "additional_insights": "Include practical examples and tool recommendations",
+    "source": "claude_skill"
   }'
 ```
 
@@ -422,6 +426,7 @@ The `generated_article` field is null until the order completes. The `processing
 | `point_of_view` | string | optional | `"First person"`, `"Second person"`, `"Third person"` |
 | `additional_insights` | string | optional | Extra instructions for the writer |
 | `folder_id` | string | optional | Dashboard folder ID |
+| `source` | string | `"public_api"` | Set to `"claude_skill"` to tag orders created via this skill |
 
 **Always confirm with the user before submitting a writer agent order and check their credit balance first.**
 
@@ -442,7 +447,8 @@ curl -s -X POST "${BASE}/api/advanced-ranking/order/" \
     "language": "en",
     "location": "United States",
     "domain": "example.com",
-    "include_word_count": true
+    "include_word_count": true,
+    "source": "claude_skill"
   }'
 ```
 
@@ -481,7 +487,8 @@ curl -s -X POST "${BASE}/api/advanced-ranking/batch/order/" \
     "language": "en",
     "location": "United States",
     "domain": "example.com",
-    "include_word_count": true
+    "include_word_count": true,
+    "source": "claude_skill"
   }'
 ```
 
@@ -517,6 +524,7 @@ done
 | `domain` | string | required | Domain to check rankings for (not `url`) |
 | `device` | string | `"desktop"` | `"desktop"` or `"mobile"` |
 | `include_word_count` | boolean | optional | Include word count for ranking pages |
+| `source` | string | `"public_api"` | Set to `"claude_skill"` to tag orders created via this skill |
 
 ---
 
@@ -534,7 +542,8 @@ curl -s -X POST "${BASE}/api/keyword-content/order/" \
     "keyword": "seo tools",
     "language": "en",
     "location": "United States",
-    "content_insights": ["paa", "reddit_questions", "quora_questions", "meta_titles", "meta_descriptions"]
+    "content_insights": ["paa", "reddit_questions", "quora_questions", "meta_titles", "meta_descriptions"],
+    "source": "claude_skill"
   }'
 ```
 
@@ -573,6 +582,7 @@ Results include arrays per requested insight type and CSV download links.
 | `location` | string | required | Full location name |
 | `content_insights` | array | required | Any combination of: `"paa"`, `"reddit_questions"`, `"quora_questions"`, `"meta_titles"`, `"meta_descriptions"` |
 | `device` | string | `"desktop"` | `"desktop"` or `"mobile"` |
+| `source` | string | `"public_api"` | Set to `"claude_skill"` to tag orders created via this skill |
 
 ---
 
@@ -620,7 +630,8 @@ order_id=$(curl -s -X POST "${BASE}/api/keywords-insights/order/" \
     "insights": ["cluster", "context"],
     "clustering_method": "volume",
     "grouping_accuracy": 4,
-    "hub_creation_method": "medium"
+    "hub_creation_method": "medium",
+    "source": "claude_skill"
   }' | jq -r '.order_id')
 
 echo "Order submitted: ${order_id}"
@@ -683,5 +694,6 @@ Each feature has its own polling route. **Never mix polling endpoints across fea
 - API key access requires a Professional or Premium plan
 - API keys are prefixed with `kwi_sk_` and created from the KI dashboard
 - Bearer tokens still work but are deprecated; always use API keys
+- All order creation requests should include `"source": "claude_skill"` to identify orders placed through this skill
 - Full API reference: https://api.keywordinsights.ai/apidocs/
 - Docs: https://docs.keywordinsights.ai/api/api-key-authentication
